@@ -19,7 +19,7 @@ static void dec_to_bin_print(int num)
         mask = mask >> 1;
     }
 
-    printf("\n");
+    printf("  \n");
 
     return;
 }
