@@ -1,12 +1,12 @@
 /*
 * Author: Lee Jhun Hyeok <wnsx0000@gmail.com>
-* This program is stack (abstract data type) created for practice using linked list, and text file.
+* This program is stack(abstract data type) created for practice using linked list, and text file.
 * Stack saves English words.
 */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string.h> 
 
 #define WORD_SIZE 10                //maximum word length
 #define COMMAND_HEAD_SIZE 10        //maximum head command length
