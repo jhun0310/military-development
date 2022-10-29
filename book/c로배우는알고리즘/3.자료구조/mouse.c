@@ -56,6 +56,8 @@ record
 #define FIRST_Y     (MAZE_SIZE_Y - 2)
 #define FIRST_DIR   LEFT
 
+//program sleep time
+#define MOUSE_SLEEP "sleep 0.02"
 
 //1->wall, 0->space
 int maze_map[MAZE_SIZE_X][MAZE_SIZE_Y] =
@@ -84,7 +86,7 @@ int maze_map[MAZE_SIZE_X][MAZE_SIZE_Y] =
 int **mouse_his = NULL; //recorded history
 int mouse_x = FIRST_X;
 int mouse_y = FIRST_Y;
-int mouse_dir = FIRST_DIR;
+unsigned int mouse_dir = FIRST_DIR;
 
 
 void maze_print(void)
@@ -114,10 +116,10 @@ void his_record(int x, int y)
 {
     static int index = 0;
 
-    if((x == FIRST_X) && (y == FIRST_Y)) //first call
+    if(mouse_his == NULL) //first call
     {
         mouse_his = (int **)malloc(sizeof(int *) * MAZE_SIZE_X * MAZE_SIZE_Y);
-        for(int i = 0; i < MAZE_SIZE_X; i++)
+        for(int i = 0; i < (MAZE_SIZE_X * MAZE_SIZE_Y); i++)
         {
             mouse_his[i] = (int *)malloc(sizeof(int) * 2);
         }
@@ -125,6 +127,17 @@ void his_record(int x, int y)
     
     mouse_his[index][0] = x;
     mouse_his[index++][1] = y;
+
+    return;
+}
+
+void end_record(void)
+{
+    for(int i = 0; i < MAZE_SIZE_X; i++)
+    {
+        free(mouse_his[i]);
+    }
+    free(mouse_his);
 
     return;
 }
@@ -143,23 +156,68 @@ int escape_or_not(int x, int y)
     return 0;
 }
 
+//1-> wall, 0->space
+int wall_scan(int x, int y, unsigned int dir)
+{
+    if(dir == UP) (y--);
+    if(dir == RIGHT) (x++);
+    if(dir == DOWN) (y++);
+    if(dir == LEFT) (x--);
+
+    if((x < 0) || (x >= MAZE_SIZE_X) || (y < 0) || (y >= MAZE_SIZE_Y))
+    {
+        printf("\n***Stack Overflow : wall_scan()***\n");
+        exit(0);
+    }
+
+    return maze_map[y][x];
+}
+
 void right_hand()
 {
     while(1)
     {
         maze_print(); //print map & mouse
+        his_record(mouse_x, mouse_y);
 
         if(escape_or_not(mouse_x, mouse_y)) //escaped->1, none-escaped->0
         {
+            printf("Mouse escaped maze!\n");
             break;
         }
 
         //setting direction
-        mouse_dir << 1; //right
+        //to the right side
+        if(mouse_dir == LEFT)
+        {
+            mouse_dir = UP;
+        }
+        else
+        {
+            mouse_dir = mouse_dir << 1;
+        }
 
+        //to the left side
+        while(wall_scan(mouse_x, mouse_y, mouse_dir))
+        {
+            if(mouse_dir == UP)
+            {
+                mouse_dir = LEFT;
+            }
+            else
+            {
+                mouse_dir = mouse_dir >> 1;
+            }   
+        }
         
+        //move forward
+        if(mouse_dir == UP) (mouse_y--);
+        if(mouse_dir == RIGHT) (mouse_x++);
+        if(mouse_dir == DOWN) (mouse_y++);
+        if(mouse_dir == LEFT) (mouse_x--);
 
-
+        //sleep for visual check
+        system(MOUSE_SLEEP);   
     }
 
     his_record(-1, -1);
@@ -167,9 +225,38 @@ void right_hand()
     return;
 }
 
-#include <stdio.h>
+void shortest_path(void)
+{
+    printf("Press any key to watch shortest path.");
+    getchar();
+
+    int last = 0;
+
+    while(mouse_his[last][0] > 0)
+    {
+        last++;
+    }
+    
+    for(int i = last; i >=0; i--)
+    {
+        mouse_x = mouse_his[i][0];
+        mouse_y = mouse_his[i][1];
+        maze_print(); //print map & mouse
+
+        //sleep for visual check
+        system(MOUSE_SLEEP);
+    }
+
+    return;
+}
 
 int main(void)
 {
+    right_hand();
+
+    shortest_path();
+
+    end_record();
+
     return 0;
 }
