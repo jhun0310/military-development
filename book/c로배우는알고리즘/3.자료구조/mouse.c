@@ -34,11 +34,16 @@ This program is about maze and the shortest path.
     7. 탈출했으면 record에 -1 넣고 끝.
 
 최단경로로 되돌아가기
-    1. 이동한 경로 검사해서 겹치는 것 제거.
-    2. 남은 좌표대로 이동.
 
 record
     1. 전역변수에 현재 좌표 저장.
+
+
+
+~참고~
+우선법을 이용하여 중복되는 경로를 제거하는 방식은 문제가 있다.
+쥐가 지났던 적이 없는 부분에 대해서는 평가할 수가 없다.
+다시 말해, 진정한 의미의 최단 경로라고는 말할 수 없다는 것.
 */
 
 #include <stdio.h>
@@ -57,7 +62,7 @@ record
 #define FIRST_DIR   LEFT
 
 //program sleep time
-#define MOUSE_SLEEP "sleep 0.02"
+#define MOUSE_SLEEP "sleep 0.1"
 
 //1->wall, 0->space
 int maze_map[MAZE_SIZE_X][MAZE_SIZE_Y] =
@@ -225,11 +230,49 @@ void right_hand()
     return;
 }
 
+/*
+shortest_path() -> 최단 경로로 되돌아가기.
+    1. 이동한 경로 검사해서 겹치는 것 제거.
+    2. 남은 좌표대로 이동.
+*/
 void shortest_path(void)
 {
     printf("Press any key to watch shortest path.");
     getchar();
 
+    //겹치는 경로 제거
+    int loop = 0;
+    int inner_loop, inner_loop_2;
+    int gap;
+
+    while(mouse_his[loop][0] > 0)
+    {
+        inner_loop = (loop + 1);
+        
+        while(mouse_his[inner_loop][0] > 0)
+        {
+            if((mouse_his[loop][0] == mouse_his[inner_loop][0]) && (mouse_his[loop][1] == mouse_his[inner_loop][1]))
+            {
+                inner_loop_2 = 1;
+
+                do
+                {
+                    mouse_his[loop + inner_loop_2][0] = mouse_his[inner_loop + inner_loop_2][0];
+                    mouse_his[loop + inner_loop_2][1] = mouse_his[inner_loop + inner_loop_2][1];
+
+                    inner_loop_2++;
+                }while(mouse_his[inner_loop + inner_loop_2][0] > 0);
+
+                break;
+            }
+
+            inner_loop++;
+        }
+
+        loop++;
+    }
+
+    //최단 경로 출력
     int last = 0;
 
     while(mouse_his[last][0] > 0)
@@ -237,7 +280,7 @@ void shortest_path(void)
         last++;
     }
     
-    for(int i = last; i >=0; i--)
+    for(int i = last; i >= 0; i--)
     {
         mouse_x = mouse_his[i][0];
         mouse_y = mouse_his[i][1];
