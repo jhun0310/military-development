@@ -1,7 +1,7 @@
 /*
-* Author: Lee Jhun Hyeok <wnsx0000@gmail.com>
-* Date: 22. 11. 07.
-* Yosep's Problem by chapter 3 of c로배우는알고리즘.
+Author: Lee Jhun Hyeok <wnsx0000@gmail.com>
+Date: 22. 11. 07. ~ 22. 11. 08.
+Yosep's Problem by chapter 3 of c로배우는알고리즘.
 
 ~Work Step~
 1. 사람의 수 n, 간격 step을 입력받는다.
