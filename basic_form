@@ -1,0 +1,28 @@
+코드 작성 과정.
+1. 프로그램을 구상하고, 구조를 c로배우는알고리즘에 나온 것과 같이 표현한다.
+사용할 알고리즘/자료구조 등을 생각하는 것.
+(이때 가장 간단히 구현할 수 있는 방법을 선택한다.)
+2. 구조를 참고하여 코드를 작성한다.
+3. 프로그램을 완성하여 문제 없이 작동하는 것을 확인한다.
+4. 코드, 알고리즘 등을 개선한다.
+
+
+
+/*
+Author: Lee Jhun Hyeok <wnsx0000@gmail.com>
+Date: 22. 11. 15.
+Baekjoon 2563th quiz.
+
+~conception~
+~limit~
+~data structure~
+~Work Step~
+~추가적 내용 정리~
+*/
+
+#include <stdio.h>
+
+int main(void)
+{
+    return 0;
+}
