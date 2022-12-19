@@ -13,6 +13,31 @@ Shell sort algorithm. 'c로 배우는 알고리즘 1' p.345.
 */
 void shell_sort(int a[], int size)
 {
+   int tmp, k;
+
+    for(int h = (size / 2); h > 0; h /= 2)
+    {
+        for(int i = 0; i < h; i++)
+        {
+            for(int j = (h + i); j < size; j += h)
+            {
+                tmp = a[j];
+                for(k = (j - h); k >= 0; k -= h)
+                {
+                    if(a[k] > tmp)
+                    {
+                        a[k + h] = a[k];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                a[k + h] = tmp;
+            }
+        }
+    }
+
     return;
 }
 
